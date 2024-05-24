@@ -2,14 +2,14 @@
 # Workflow: Build PR
 #
 
-name: Build PR (Community)
+name: Build PR (Community, Branch)
 on: pull_request
 
 jobs:
 
   build-pr:
 
-    name: "Build PR (Community) #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+    name: "Build PR (Community, Branch) #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
     runs-on: ubuntu-latest
 
     steps:
@@ -25,7 +25,7 @@ jobs:
           fi
 
   build-pr-call:
-
-    name: "Call (Community)"        
+  
+    name: "Call (Community, Branch)"        
     uses: ./.github/workflows/callme.yml
     secrets: inherit

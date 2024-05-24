@@ -2,7 +2,7 @@
 #
 #
 
-name: Callable (Organization)
+name: Callable (Branch)
 on: 
   workflow_call:
     inputs:
@@ -19,12 +19,12 @@ jobs:
 
   build-pr:
   
-    name: "Callable (Organization)"
+    name: "Callable (Branch)"
     runs-on: ubuntu-latest
     
     steps:
     
-      - name: Step Organization
+      - name: Step Branch
         shell: bash
         run: |
           echo "Callable"

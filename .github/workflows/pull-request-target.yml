@@ -2,14 +2,14 @@
 # Workflow: Build PR
 #
 
-name: Build PR (Organization)
+name: Build PR (Organization, Branch)
 on: pull_request_target
 
 jobs:
 
   build-pr:
 
-    name: "Build PR (Organization) #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
+    name: "Build PR (Organization, Branch) #${{ github.event.pull_request.number }}: ${{ github.event.pull_request.title }}"
     runs-on: ubuntu-latest
     outputs:
       ref: ${{ steps.get-refs.ref }}
@@ -47,8 +47,8 @@ jobs:
           git log --graph --pretty=format':%h%d %s %an, %ar' | head -n 12
 
   build-pr-call:
-
-    name: "Call (Organization)"        
+  
+    name: "Call (Organization, Branch)"        
     needs: build-pr
     uses: ./.github/workflows/callme.yml
     secrets: {}
