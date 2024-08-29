@@ -1,0 +1,49 @@
+#
+# Create release on GitHub when release branch is pushed
+#
+name: Release
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      release-tag: ${{ steps.autotag.outputs.new-tag }}
+      release-url: ${{ steps.release.outputs.html_url }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Increment version tag
+        id: autotag
+        uses: phish108/autotag-action@v1.1.64
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          with-v: true
+
+      - name: Get commit messages since last tag
+        id: get-commits
+        run: |
+          last_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          if [ -z "$last_tag" ]; then
+            commits=$(git log --pretty=format:"%s")
+          else
+            commits=$(git log ${last_tag}..HEAD --pretty=format:"%s")
+          fi
+          echo "::set-output name=commits::$commits"
+
+      - name: Create pre-release
+        id: release
+        uses: ncipollo/release-action@v1.14.0
+        with:
+          generateReleaseNotes: false
+          makeLatest: true
+          prerelease: false
+          skipIfReleaseExists: true
+          tag: v${{ steps.autotag.outputs.new-tag }}
+          body: ${{ steps.get-commits.outputs.commits }}
